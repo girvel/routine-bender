@@ -1,6 +1,7 @@
 [package]
-name = "routine-bender"
+name = "rb"
 version = "0.1.0"
+authors = ["Nikita Dobrynin / girvel <widauka@ya.ru>"]
 edition = "2021"
 
 [dependencies]

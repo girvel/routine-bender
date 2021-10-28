@@ -23,11 +23,3 @@ fn main() {
     let SubCommand::Add(a) = opts.subcommand;
     println!("{}", a.what)
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn example_test() {
-        assert_eq!(123, 123);
-    }
-}
