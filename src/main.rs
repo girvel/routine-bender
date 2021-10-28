@@ -1,7 +1,7 @@
 use clap::{Parser};
 
 #[derive(Parser)]
-#[clap(version = "0.1", author = "Nikita girvel Dobrynin <widauka@ya.ru>")]
+#[clap(version = "0.1", author = "Nikita Dobrynin / girvel <widauka@ya.ru>")]
 struct Opts {
     #[clap(subcommand)]
     subcommand: SubCommand,
@@ -22,4 +22,12 @@ fn main() {
 
     let SubCommand::Add(a) = opts.subcommand;
     println!("{}", a.what)
+}
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn example_test() {
+        assert_eq!(123, 123);
+    }
 }
