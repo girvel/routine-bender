@@ -1,9 +1,12 @@
 use clap::{Parser};
-use std::fs::OpenOptions;
+use std::fs::{create_dir_all, OpenOptions};
 use std::io;
 use std::io::Write;
 use std::path::Path;
 use std::process::exit;
+
+// TODO restructure code
+// TODO add docs
 
 #[derive(Parser)]
 #[clap(version = "0.1", author = "Nikita Dobrynin / girvel <widauka@ya.ru>")]
@@ -22,22 +25,27 @@ struct Add {
     what: String,
 }
 
-fn generate_name() -> String {String::from("task")}
-
 fn main() {
     let opts: Opts = Opts::parse();
 
+    let mut home_path = dirs::home_dir().expect("Can not find home directory");
+    home_path.push(".rb");
+
+    create_dir_all(home_path.clone()).expect("Can not create home directory");
+
     match opts.subcommand {
         SubCommand::Add(add) => {
-            // TODO in home directory
-            let mut path_to_task: &Path;
-            // create_dir_all(path_to_task.parent().expect(""))
-            //     .expect("Can not create data directory for routine-bender");
+            let mut generator = names::Generator::default();
 
             let mut file = loop {
-                let name = generate_name();
-                path_to_task = Path::new(&name);
-                match OpenOptions::new().write(true).create_new(true).open(path_to_task) {
+                let mut task_path = home_path.clone();
+
+                {
+                    let name = generator.next().unwrap();
+                    task_path.push(name);
+                }
+
+                match OpenOptions::new().write(true).create_new(true).open(task_path) {
                     Ok(file) => break file,
                     Err(e) => {
                         if e.kind() != io::ErrorKind::AlreadyExists {
@@ -48,7 +56,7 @@ fn main() {
                 };
             };
 
-            file.write_all(add.what.as_bytes());
+            file.write_all(add.what.as_bytes()).expect("Can not write a file");
         },
     };
 }
